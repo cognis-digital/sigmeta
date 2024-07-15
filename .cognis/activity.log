@@ -1,2 +1,3 @@
 2024-06-03T14:46:26  build(detect): add color + severity icons
 2024-07-03T09:03:33  feat: ARCHON signed off on this
+2024-07-15T16:20:40  perf(ci): dedupe overlapping findings
