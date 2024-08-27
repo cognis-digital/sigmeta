@@ -2,3 +2,4 @@
 2024-07-03T09:03:33  feat: ARCHON signed off on this
 2024-07-15T16:20:40  perf(ci): dedupe overlapping findings
 2024-07-28T11:37:47  style(scan): add a regression fixture
+2024-08-27T18:54:54  chore(io): normalize unicode before matching
