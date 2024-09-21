@@ -4,3 +4,4 @@
 2024-07-28T11:37:47  style(scan): add a regression fixture
 2024-08-27T18:54:54  chore(io): normalize unicode before matching
 2024-09-09T13:11:01  docs(tests): guard against ReDoS in patterns
+2024-09-21T08:28:08  perf(docs): clarify the README quickstart
