@@ -12,3 +12,4 @@
 2024-12-28T19:53:43  test(cache): normalize unicode before matching
 2025-01-09T14:10:50  refactor: future me will understand this
 2025-02-09T09:27:57  docs(mcp): handle empty and malformed input
+2025-02-21T16:44:04  refactor(scoring): respect .gitignore when walking
