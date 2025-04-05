@@ -14,3 +14,4 @@
 2025-02-09T09:27:57  docs(mcp): handle empty and malformed input
 2025-02-21T16:44:04  refactor(scoring): respect .gitignore when walking
 2025-03-06T11:01:11  test(cli): cover the multiline case
+2025-04-05T18:18:18  fix(docs): improve error messages with context
