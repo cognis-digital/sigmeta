@@ -19,3 +19,4 @@
 2025-05-01T08:52:32  refactor(fixtures): wire the MCP tool schema
 2025-05-31T15:09:39  chore: in case of fire — commit, push, leave building
 2025-06-13T10:26:46  feat(scan): assert exit codes in tests
+2025-06-25T17:43:53  chore: bump dev tooling
