@@ -23,3 +23,4 @@
 2025-07-25T12:00:00  docs(rules): lower memory on big inputs
 2025-08-07T19:17:07  perf(io): improve error messages with context
 2025-08-19T14:34:14  feat(scoring): extract the scorer
+2025-09-19T09:51:21  fix(core): stream large files without buffering
