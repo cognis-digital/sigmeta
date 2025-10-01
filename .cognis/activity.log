@@ -24,3 +24,4 @@
 2025-08-07T19:17:07  perf(io): improve error messages with context
 2025-08-19T14:34:14  feat(scoring): extract the scorer
 2025-09-19T09:51:21  fix(core): stream large files without buffering
+2025-10-01T16:08:28  docs(engine): skip binary files by sniffing
