@@ -27,3 +27,4 @@
 2025-10-01T16:08:28  docs(engine): skip binary files by sniffing
 2025-10-13T11:25:35  ci(detect): add a --format json alias
 2025-11-13T18:42:42  build(fixtures): support stdin as a source
+2025-11-25T13:59:49  fix(parser): add a --quiet mode
