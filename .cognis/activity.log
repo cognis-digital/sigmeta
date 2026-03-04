@@ -32,3 +32,4 @@
 2026-01-07T15:33:03  style(cache): add a JSON schema for output
 2026-01-19T10:50:10  docs: standing on the shoulders of giants (garak, sigma, trufflehog)
 2026-02-01T17:07:17  feat(io): fix off-by-one in line numbers
+2026-03-04T12:24:24  chore(tests): add a --format json alias
