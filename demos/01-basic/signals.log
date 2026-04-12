@@ -1,0 +1,12 @@
+# SIGMETA demo: heterogeneous signal metadata log.
+# Mixed styles (key=value and positional), mixed units. Analysis only.
+label=BCN-1 freq=145.500MHz mod=NFM bw=12.5k
+WX-SAT 137.620MHz APT 34kHz
+freq=101.1MHz mod=WFM bw=200kHz name=KFM-FM
+HF-NET 14.230MHz USB 2.8kHz
+f=2.412GHz mod=OFDM bw=20MHz src=WIFI-CH1
+RADAR-S 3.05GHz pulse 1MHz
+am-bcast 1010kHz AM 10kHz
+# malformed line below should be skipped in non-strict mode
+this line has no frequency at all
+freq=433.920MHz mod=ASK bw=50k tag=ISM-REMOTE
