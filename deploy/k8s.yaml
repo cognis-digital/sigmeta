@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: sigmeta, labels: { app: sigmeta } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: sigmeta } }
+  template:
+    metadata: { labels: { app: sigmeta } }
+    spec:
+      containers:
+        - name: sigmeta
+          image: ghcr.io/cognis-digital/sigmeta:latest
+          ports: [{ containerPort: 8000 }]
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: sigmeta }
+spec:
+  selector: { app: sigmeta }
+  ports: [{ port: 80, targetPort: 8000 }]
