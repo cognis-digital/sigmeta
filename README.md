@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-sigmeta
+pip install "git+https://github.com/cognis-digital/sigmeta.git"
 sigmeta scan .            # → prioritized findings in seconds
 ```
 
@@ -51,7 +51,7 @@ Parse and classify signal metadata (freq, modulation, bandwidth) into a normaliz
 ## Quick start
 
 ```bash
-pip install cognis-sigmeta
+pip install "git+https://github.com/cognis-digital/sigmeta.git"
 sigmeta --version
 sigmeta scan .                       # scan current project
 sigmeta scan . --format json         # machine-readable
