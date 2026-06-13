@@ -20,6 +20,12 @@ pip install "git+https://github.com/cognis-digital/sigmeta.git"
 sigmeta scan .            # → prioritized findings in seconds
 ```
 
+<!-- cognis:layman:start -->
+## What is this?
+
+Sigmeta reads log files that contain radio signal recordings and automatically sorts out the details — frequency, type of signal, and bandwidth — into a clean, organized catalog. Think of it as a translator that takes raw, messy signal notes and turns them into a tidy table you can search and share. It works from the command line or inside automated workflows, and outputs the results as a readable table or as machine-friendly JSON. It is useful for radio hobbyists, spectrum analysts, and developers who want to process signal metadata without setting up complex software.
+<!-- cognis:layman:end -->
+
 ## Contents
 
 - [Why sigmeta?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
@@ -48,6 +54,42 @@ Parse and classify signal metadata (freq, modulation, bandwidth) into a normaliz
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:install:start -->
+## Install
+
+`sigmeta` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/sigmeta/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/sigmeta/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/sigmeta.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/sigmeta.git"  # uv
+pip install "git+https://github.com/cognis-digital/sigmeta.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/sigmeta.git
+cd sigmeta && pip install .
+```
+
+Then run:
+```sh
+sigmeta --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
