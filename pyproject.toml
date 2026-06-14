@@ -34,3 +34,6 @@ sigmeta = "sigmeta.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sigmeta"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
