@@ -10,9 +10,13 @@ does not tune radios, transmit, or control any hardware.
 """
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field, asdict
 from typing import Iterable, Iterator, Optional
+
+TOOL_NAME = "sigmeta"
+TOOL_VERSION = "0.1.0"
 
 
 class ParseError(ValueError):
@@ -129,12 +133,13 @@ class SignalRecord:
 
 # --- Helpers ---------------------------------------------------------------
 
-def normalize_modulation(token: str) -> str:
+def normalize_modulation(token) -> str:
     """Map a free-form modulation token to a canonical family.
 
+    Accepts any value; non-string or falsy inputs return "UNKNOWN".
     Returns "UNKNOWN" for tokens that don't resemble a known scheme.
     """
-    if not token:
+    if not isinstance(token, str) or not token:
         return "UNKNOWN"
     key = re.sub(r"[\s_]+", "", token.strip().lower())
     if key in _MOD_ALIASES:
@@ -171,14 +176,22 @@ def _parse_quantity(text: str, units: dict, what: str) -> float:
     m = re.fullmatch(r"([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\s*([a-zA-Z]+)?", text)
     if not m:
         raise ParseError(f"cannot parse {what}: {text!r}")
-    value = float(m.group(1))
+    try:
+        value = float(m.group(1))
+    except (ValueError, OverflowError) as exc:
+        raise ParseError(f"cannot convert {what} value: {text!r}") from exc
+    if not math.isfinite(value):
+        raise ParseError(f"non-finite {what} value: {text!r}")
     unit = (m.group(2) or "").lower()
     if unit == "":
         # Bare number: assume Hz for freq, Hz for bandwidth.
         return value
     if unit not in units:
         raise ParseError(f"unknown {what} unit: {unit!r} in {text!r}")
-    return value * units[unit]
+    result = value * units[unit]
+    if not math.isfinite(result):
+        raise ParseError(f"non-finite {what} after unit conversion: {text!r}")
+    return result
 
 
 # Recognized key tokens for key=value style logs.

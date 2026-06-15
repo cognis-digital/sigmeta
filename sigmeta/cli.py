@@ -20,9 +20,15 @@ from .core import parse_lines, catalog_summary, ParseError
 
 def _read_input(path: str):
     if path == "-":
-        return sys.stdin.read().splitlines()
-    with open(path, "r", encoding="utf-8") as fh:
-        return fh.read().splitlines()
+        try:
+            return sys.stdin.read().splitlines()
+        except UnicodeDecodeError as e:
+            raise OSError(f"stdin contains invalid UTF-8: {e}") from e
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return fh.read().splitlines()
+    except UnicodeDecodeError as e:
+        raise OSError(f"{path}: file contains invalid UTF-8: {e}") from e
 
 
 def _fmt_hz(hz):
@@ -98,6 +104,14 @@ def main(argv: Optional[list] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    try:
+        return _run(args, parser)
+    except KeyboardInterrupt:
+        print(f"\n{TOOL_NAME}: interrupted", file=sys.stderr)
+        return 130
+
+
+def _run(args, parser) -> int:
     if args.command == "classify":
         try:
             lines = _read_input(args.input)
