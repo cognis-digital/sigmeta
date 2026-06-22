@@ -1,0 +1,8 @@
+# SIGMETA demo: VHF aeronautical airband scan export (key=value).
+# Public 118-137 MHz AM voice allocations. Analysis only.
+label=TWR freq=118.300MHz mod=AM bw=8.33k
+label=GND freq=121.900MHz mod=AM bw=25k
+label=ATIS freq=127.750MHz mod=AM bw=25k
+label=EMERGENCY freq=121.500MHz mod=AM bw=25k
+label=APP freq=119.100MHz mod=AM bw=8.33k
+label=CTR freq=134.450MHz mod=AM bw=8.33k

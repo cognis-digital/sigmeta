@@ -10,9 +10,37 @@ does not tune radios, transmit, or control any hardware.
 """
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass, field, asdict
 from typing import Iterable, Iterator, Optional
+
+
+# --- Tool identity ---------------------------------------------------------
+
+TOOL_NAME = "sigmeta"
+
+
+def _read_version() -> str:
+    """Resolve the tool version from the repo VERSION file, falling back to a
+    sane default. Keeping this in core (not just __init__) ensures the CLI
+    --version output matches the published VERSION rather than a stale stub."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for candidate in (
+        os.path.join(here, "VERSION"),
+        os.path.join(os.path.dirname(here), "VERSION"),
+    ):
+        try:
+            with open(candidate, "r", encoding="utf-8") as fh:
+                v = fh.read().strip()
+            if v:
+                return v
+        except OSError:
+            continue
+    return "0.6.6"
+
+
+TOOL_VERSION = _read_version()
 
 
 class ParseError(ValueError):

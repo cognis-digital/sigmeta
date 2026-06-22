@@ -1,0 +1,8 @@
+# SIGMETA demo: satellite / weather downlink tracking (mixed styles).
+# Public APT/LRPT, NOAA weather, and L/S-band downlink allocations. Analysis only.
+freq=137.620MHz mod=FM bw=34kHz label=NOAA-APT
+freq=137.100MHz mod=FM bw=40kHz name=METEOR-LRPT
+WX-NOAA 162.400MHz FM 25k
+freq=1.6925GHz mod=OFDM bw=1.5MHz label=L-BAND-DL
+freq=2.2500GHz mod=PSK bw=2MHz name=S-BAND-TLM
+freq=146.000MHz mod=FM bw=15k label=AMSAT-2M

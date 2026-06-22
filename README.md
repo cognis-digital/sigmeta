@@ -36,7 +36,7 @@
 
 pip install cognis-sigmeta
 
-sigmeta scan .            # → prioritized findings in seconds
+sigmeta classify capture.log         # → normalized signal catalog in ms
 
 ```
 
@@ -69,9 +69,10 @@ sigmeta scan .            # → prioritized findings in seconds
    cat capture.log | sigmeta classify -
    ```
 
-4. **Read JSON output** for downstream processing, or just the rollup with `--summary-only`:
+4. **Read JSON output** for downstream processing, **CSV** for spreadsheets/SIEM, or just the rollup with `--summary-only`:
    ```bash
    sigmeta --format json classify capture.log | jq '.summary'
+   sigmeta --format csv  classify capture.log > catalog.csv
    sigmeta classify capture.log --summary-only
    ```
 
@@ -90,7 +91,7 @@ Parse and classify signal metadata (freq, modulation, bandwidth) into a normaliz
 
 
 
-`sigmeta` is single-purpose, scriptable, and self-hostable: point it at a target, get prioritized results in the format your workflow already speaks (table · JSON · SARIF), gate CI on it, and let agents drive it over MCP.
+`sigmeta` is single-purpose, scriptable, and self-hostable: point it at a log, get a normalized catalog in the format your workflow already speaks (table · JSON · CSV), gate CI on the exit code, and let agents drive it over MCP.
 
 
 
@@ -116,6 +117,8 @@ Parse and classify signal metadata (freq, modulation, bandwidth) into a normaliz
 
 - ✅ Catalog Summary
 
+- ✅ Table · JSON · CSV output (`--format csv` for spreadsheets/SIEM)
+
 - ✅ Runs on Linux/macOS/Windows · Docker · devcontainer
 
 - ✅ Ports in Python, JavaScript, Go, and Rust (`ports/`)
@@ -138,11 +141,15 @@ pip install cognis-sigmeta
 
 sigmeta --version
 
-sigmeta scan .                       # scan current project
+sigmeta classify capture.log                 # normalized catalog (table)
 
-sigmeta scan . --format json         # machine-readable
+sigmeta --format json classify capture.log   # machine-readable
 
-sigmeta scan . --fail-on high        # CI gate (non-zero exit)
+sigmeta --format csv  classify capture.log   # spreadsheet / SIEM import
+
+cat capture.log | sigmeta classify -         # stdin
+
+sigmeta classify capture.log --strict        # CI gate (non-zero exit)
 
 ```
 
@@ -160,16 +167,39 @@ sigmeta scan . --fail-on high        # CI gate (non-zero exit)
 
 ```text
 
-$ sigmeta scan .
+$ sigmeta classify demos/02-airband-scan/airband.log
 
-  [HIGH    ] SIG-001  example finding             (./src/app.py)
+LABEL      FREQ        BAND  MOD  BW        SERVICE HINT
+---------  ----------  ----  ---  --------  -----------------------------
+TWR        118.3 MHz   VHF   AM   8.33 kHz  Aeronautical (AM voice / nav)
+GND        121.9 MHz   VHF   AM   25 kHz    Aeronautical (AM voice / nav)
+EMERGENCY  121.5 MHz   VHF   AM   25 kHz    Aeronautical (AM voice / nav)
 
-  [MEDIUM  ] SIG-002  another signal              (./config.yaml)
+records=6  bands={'VHF': 6}  mods={'AM': 6}  warnings=0
 
+```
 
+### Try the demos
 
-  2 findings · risk score 5 · 38ms
+`demos/` ships realistic, ready-to-run signal logs in the tool's real input
+format, each with a `SCENARIO.md` (where the data came from, the exact run
+command, and what to expect):
 
+| Demo | Scenario |
+|---|---|
+| `01-basic` | Heterogeneous mixed-style log (kv + positional, mixed units) |
+| `02-airband-scan` | VHF aeronautical airband (118-137 MHz AM) |
+| `03-ism-survey` | ISM / U-NII unlicensed-band spectrum survey |
+| `04-hf-utility` | HF utility / shortwave monitoring (3-30 MHz) |
+| `05-empty-strict` | No usable records → exit-code / CI gate |
+| `06-marine-vhf` | Marine VHF channel plan (156-162 MHz) |
+| `07-pmr-landmobile` | UHF land-mobile / FRS-GMRS / DMR inventory |
+| `08-satellite-downlink` | Satellite / weather downlink tracking |
+| `09-mixed-units-csv` | Every unit/style → `--format csv` export |
+
+```bash
+python -m sigmeta classify demos/03-ism-survey/ism.log
+python -m sigmeta --format csv classify demos/09-mixed-units-csv/capture.log
 ```
 
 
@@ -208,11 +238,11 @@ flowchart LR
 
 - **MCP server** — `sigmeta mcp` (Claude Desktop, Cursor, Cognis.Studio, [uncensored-fleet](https://github.com/cognis-digital/uncensored-fleet))
 
-- **OpenAI-compatible / JSON** — pipe `sigmeta scan . --format json` into any agent or LLM
+- **OpenAI-compatible / JSON** — pipe `sigmeta --format json classify capture.log` into any agent or LLM
 
 - **LangChain · CrewAI · AutoGen · LlamaIndex** — wrap the CLI/JSON as a tool in one line
 
-- **CI / scripts** — exit codes + SARIF for non-AI pipelines
+- **CI / scripts** — exit codes + CSV/JSON for non-AI pipelines
 
 
 
@@ -234,7 +264,7 @@ flowchart LR
 
 | Single command, zero config | ✅ | ⚠️ |
 
-| JSON + SARIF for CI | ✅ | varies |
+| JSON + CSV for CI | ✅ | varies |
 
 | MCP-native (AI agents) | ✅ | ❌ |
 
@@ -252,7 +282,7 @@ flowchart LR
 
 
 
-Pipes into your stack: **SARIF** for code-scanning, **JSON** for anything, an **MCP server** (`sigmeta mcp`) for AI agents, and a webhook forwarder for SIEM/Slack/Jira. See [`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md).
+Pipes into your stack: **CSV** for spreadsheets/SIEM, **JSON** for anything, an **MCP server** (`sigmeta mcp`) for AI agents, and a webhook forwarder for SIEM/Slack/Jira. See [`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md).
 
 
 

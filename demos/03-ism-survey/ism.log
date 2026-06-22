@@ -1,0 +1,9 @@
+# SIGMETA demo: ISM / unlicensed-band spectrum survey (positional).
+# Public ISM allocations (433 MHz, 915 MHz, 2.4 GHz, 5 GHz). Analysis only.
+ISM-433 433.920MHz ASK 50k
+LORA-EU 868.100MHz GFSK 125k
+ISM-915 915.000MHz FHSS 500k
+WIFI-CH1 2.412GHz OFDM 20MHz
+WIFI-CH6 2.437GHz OFDM 20MHz
+BT-LE 2.402GHz GFSK 1MHz
+UNII-36 5.180GHz OFDM 80MHz

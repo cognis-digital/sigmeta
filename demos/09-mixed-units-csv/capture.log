@@ -1,0 +1,10 @@
+# SIGMETA demo: heterogeneous capture, exported to CSV for a spreadsheet.
+# Deliberately mixes Hz/kHz/MHz/GHz, k/M bandwidth shorthand, and styles.
+# Analysis only.
+label=A freq=88500000 mod=fm bw=200000
+B 162.55MHz nfm 25k
+freq=2.45GHz mod=qam bw=40M name=C
+HF-1 7.150MHz lsb 2.4k
+freq=915MHz mod=fhss bw=500k label=D
+freq=446.00625MHz mod=wibble bw=12.5k label=PMR446
+freq=10e9 mod=pulse bw=5MHz label=RDR

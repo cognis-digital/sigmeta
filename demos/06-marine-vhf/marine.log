@@ -1,0 +1,8 @@
+# SIGMETA demo: marine VHF channel plan (key=value).
+# Public marine VHF 156-162 MHz FM allocations. Analysis only.
+label=CH16-DISTRESS freq=156.800MHz mod=FM bw=25k
+label=CH06-SHIP freq=156.300MHz mod=FM bw=25k
+label=CH09-CALLING freq=156.450MHz mod=FM bw=25k
+label=CH13-BRIDGE freq=156.650MHz mod=FM bw=25k
+label=CH70-DSC freq=156.525MHz mod=FSK bw=25k
+label=WX1-NOAA freq=162.550MHz mod=FM bw=25k

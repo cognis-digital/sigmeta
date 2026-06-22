@@ -17,9 +17,10 @@ from sigmeta import (  # noqa: E402
     catalog_summary,
     ParseError,
 )
-from sigmeta.cli import main  # noqa: E402
+from sigmeta.cli import main, render_csv, CSV_COLUMNS  # noqa: E402
 
 DEMO = os.path.join(os.path.dirname(__file__), "..", "demos", "01-basic", "signals.log")
+DEMOS_DIR = os.path.join(os.path.dirname(__file__), "..", "demos")
 
 
 class TestExports(unittest.TestCase):
@@ -133,6 +134,87 @@ class TestCLI(unittest.TestCase):
         finally:
             sys.stdin = old
         self.assertEqual(rc, 1)
+
+
+class TestVersion(unittest.TestCase):
+    def test_version_matches_version_file(self):
+        # --version (via TOOL_VERSION) must match the published VERSION file,
+        # not a stale stub. Regression guard for the 0.1.0 mismatch.
+        vf = os.path.join(os.path.dirname(__file__), "..", "sigmeta", "VERSION")
+        with open(vf, "r", encoding="utf-8") as fh:
+            expected = fh.read().strip()
+        self.assertEqual(TOOL_VERSION, expected)
+        self.assertNotEqual(TOOL_VERSION, "0.1.0")
+
+
+class TestCSV(unittest.TestCase):
+    def test_render_csv_header_and_rows(self):
+        recs = list(parse_lines([
+            "label=A freq=145.5MHz mod=NFM bw=12.5k",
+            "freq=14.23MHz mod=USB bw=2.8kHz",
+        ]))
+        out = render_csv(recs)
+        lines = out.strip().splitlines()
+        self.assertEqual(lines[0], ",".join(CSV_COLUMNS))
+        self.assertEqual(len(lines), 3)  # header + 2 records
+        self.assertIn("145500000", lines[1])
+        self.assertIn("VHF", lines[1])
+
+    def test_render_csv_empty_still_has_header(self):
+        out = render_csv([])
+        self.assertEqual(out.strip(), ",".join(CSV_COLUMNS))
+
+    def test_render_csv_warning_column(self):
+        recs = list(parse_lines(["freq=446MHz mod=wibble bw=12.5k"]))
+        out = render_csv(recs)
+        self.assertIn("unrecognized modulation token", out)
+
+    def test_cli_csv_format(self):
+        buf = io.StringIO()
+        old = sys.stdout
+        sys.stdout = buf
+        try:
+            rc = main(["--format", "csv", "classify", os.path.abspath(DEMO)])
+        finally:
+            sys.stdout = old
+        self.assertEqual(rc, 0)
+        out = buf.getvalue()
+        self.assertTrue(out.startswith(",".join(CSV_COLUMNS)))
+        # 1 header + 8 demo records
+        self.assertEqual(len(out.strip().splitlines()), 9)
+
+    def test_cli_csv_summary_only(self):
+        buf = io.StringIO()
+        old = sys.stdout
+        sys.stdout = buf
+        try:
+            rc = main(["--format", "csv", "classify", os.path.abspath(DEMO),
+                       "--summary-only"])
+        finally:
+            sys.stdout = old
+        self.assertEqual(rc, 0)
+        lines = buf.getvalue().strip().splitlines()
+        self.assertEqual(lines[0], "count,freq_min_hz,freq_max_hz,warnings")
+        self.assertEqual(len(lines), 2)
+
+
+class TestDemos(unittest.TestCase):
+    """Every shipped demo must actually parse into records (except the
+    deliberately-empty exit-code demo)."""
+
+    def test_all_demos_fire(self):
+        expect_empty = {"05-empty-strict"}
+        import glob
+        logs = glob.glob(os.path.join(DEMOS_DIR, "*", "*.log"))
+        self.assertGreaterEqual(len(logs), 8)
+        for path in logs:
+            with open(path, "r", encoding="utf-8") as fh:
+                recs = list(parse_lines(fh.read().splitlines()))
+            demo = os.path.basename(os.path.dirname(path))
+            if demo in expect_empty:
+                self.assertEqual(len(recs), 0, f"{demo} should be empty")
+            else:
+                self.assertGreater(len(recs), 0, f"{demo} parsed nothing")
 
 
 if __name__ == "__main__":

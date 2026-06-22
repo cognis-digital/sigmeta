@@ -10,6 +10,8 @@ or hardware control.
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import json
 import sys
 from typing import Optional
@@ -72,6 +74,37 @@ def _print_table(records, summary, stream=sys.stdout):
     )
 
 
+CSV_COLUMNS = [
+    "label", "freq_hz", "freq_mhz", "band", "modulation",
+    "bandwidth_hz", "service_hint", "warnings",
+]
+
+
+def render_csv(records) -> str:
+    """Render parsed records as RFC 4180 CSV with a stable header row.
+
+    One row per signal record. Spreadsheet- and SIEM-friendly; round-trips the
+    same normalized fields the JSON output carries. Always emits the header,
+    even for an empty catalog, so downstream importers stay schema-stable.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(CSV_COLUMNS)
+    for r in records:
+        d = r.to_dict()
+        w.writerow([
+            d.get("label", ""),
+            f"{d['freq_hz']:.0f}",
+            d.get("freq_mhz", ""),
+            d.get("band", ""),
+            d.get("modulation", ""),
+            "" if d.get("bandwidth_hz") is None else f"{d['bandwidth_hz']:.0f}",
+            d.get("service_hint", ""),
+            "; ".join(d.get("warnings", []) or []),
+        ])
+    return buf.getvalue()
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog=TOOL_NAME,
@@ -79,7 +112,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--version", action="version",
                    version=f"{TOOL_NAME} {TOOL_VERSION}")
-    p.add_argument("--format", choices=["table", "json"], default="table",
+    p.add_argument("--format", choices=["table", "json", "csv"], default="table",
                    help="output format (default: table)")
     sub = p.add_subparsers(dest="command", required=True)
 
@@ -122,6 +155,18 @@ def main(argv: Optional[list] = None) -> int:
             if not args.summary_only:
                 payload["records"] = [r.to_dict() for r in records]
             print(json.dumps(payload, indent=2))
+        elif args.format == "csv":
+            if args.summary_only:
+                w = csv.writer(sys.stdout, lineterminator="\n")
+                w.writerow(["count", "freq_min_hz", "freq_max_hz", "warnings"])
+                w.writerow([
+                    summary["count"],
+                    "" if summary["freq_min_hz"] is None else f"{summary['freq_min_hz']:.0f}",
+                    "" if summary["freq_max_hz"] is None else f"{summary['freq_max_hz']:.0f}",
+                    summary["warnings"],
+                ])
+            else:
+                sys.stdout.write(render_csv(records))
         else:
             if args.summary_only:
                 print(

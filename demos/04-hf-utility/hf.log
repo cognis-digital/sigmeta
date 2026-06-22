@@ -1,0 +1,9 @@
+# SIGMETA demo: HF utility / shortwave monitoring (mixed styles).
+# Public HF allocations 3-30 MHz. Analysis only.
+WWV-10 10.000MHz AM 5kHz
+freq=14.230MHz mod=USB bw=2.8kHz label=HF-VOICE
+freq=8.992MHz mod=USB bw=3kHz name=HFGCS
+RTTY-NET 7.040MHz fsk 250
+CW-BCN 14.100MHz cw 100
+freq=4.625MHz mod=AM bw=10kHz label=BUZZER
+freq=3.330MHz mod=AM bw=5kHz name=TIME-SIGNAL

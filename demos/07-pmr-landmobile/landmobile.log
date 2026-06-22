@@ -1,0 +1,8 @@
+# SIGMETA demo: UHF land-mobile / PMR site inventory (positional).
+# Public FRS/GMRS + UHF business-band FM allocations. Analysis only.
+FRS-1 462.5625MHz NFM 12.5k
+GMRS-19 462.6500MHz NFM 20k
+GMRS-RPT 467.6500MHz NFM 20k
+BIZ-A 451.8000MHz NFM 12.5k
+BIZ-B 456.8000MHz NFM 12.5k
+DMR-TG1 451.0000MHz 4fsk 12.5k
