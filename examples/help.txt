@@ -1,0 +1,15 @@
+$ sigmeta-emit --help
+
+usage: sigmeta [-h] [--version] [--format {table,json,csv}] {classify} ...
+
+Parse and classify signal metadata into a normalized catalog.
+
+positional arguments:
+  {classify}
+    classify            parse a signal log into a normalized catalog
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json,csv}
+                        output format (default: table)

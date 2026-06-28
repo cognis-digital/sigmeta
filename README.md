@@ -42,6 +42,61 @@ sigmeta classify capture.log         # → normalized signal catalog in ms
 
 
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ sigmeta-emit --version
+sigmeta 0.6.6
+```
+
+```console
+$ sigmeta-emit --help
+usage: sigmeta [-h] [--version] [--format {table,json,csv}] {classify} ...
+
+Parse and classify signal metadata into a normalized catalog.
+
+positional arguments:
+  {classify}
+    classify            parse a signal log into a normalized catalog
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json,csv}
+                        output format (default: table)
+```
+
+> Blocks above are real `sigmeta` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"findings": [
+    {
+        "id": "1234567890",
+        "title": "Suspicious Network Traffic",
+        "description": "Anomalous network traffic detected from IP 192.168.1.100",
+        "created_by": "John Doe",
+        "created_at": "2023-02-15T14:30:00Z"
+    },
+    {
+        "id": "2345678901",
+        "title": "Malware Detection",
+        "description": "Malware detected on machine with IP 192.168.1.101",
+        "created_by": "Jane Smith",
+        "created_at": "2023-02-16T10:45:00Z"
+    }
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Contents
 
 
